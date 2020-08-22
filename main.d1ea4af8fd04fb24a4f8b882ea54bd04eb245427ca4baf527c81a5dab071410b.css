@@ -1072,4 +1072,7 @@ hr{
 	margin:0;
 	vertical-align:middle
 }
+.glitched {
+  @include imgGlitch("example-three", 15, 100, 100, 200, 75);
+}
 /*# sourceMappingURL=main.css.map */

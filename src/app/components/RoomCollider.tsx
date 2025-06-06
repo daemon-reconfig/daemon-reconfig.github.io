@@ -1,28 +1,44 @@
-'use client'
+// src/app/components/RoomCollider.tsx
+'use client';
 
-import React, { useMemo } from 'react'
-import { useGLTF } from '@react-three/drei'
-import { usePlane } from '@react-three/cannon'
-import * as THREE from 'three'
+import { useBox } from '@react-three/cannon';
 
 export function Colliders() {
-  // 1) Load the same GLTF so we can find floor height (min.y)
-  const gltf = useGLTF('/models/scene.glb')
-
-  // 2) Compute the bounding box once to get min.y and center.x/z
-  const { min, center } = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(gltf.scene)
-    return {
-      min: box.min.clone(),                          // { x, y (floor), z }
-      center: box.getCenter(new THREE.Vector3()).clone(), // { x, y, z }
-    }
-  }, [gltf.scene])
-
-  // 3) Create exactly one floor plane at y = min.y
-  usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    position: [center.x, min.y, center.z],
-  }))
-
-  return null
+  // Floor
+  useBox(() => ({
+    args: [10, 0.1, 10],
+    position: [0, -0.05, 0],
+    type: 'Static',
+  }));
+  // Left wall
+  useBox(() => ({
+    args: [0.1, 2, 10],
+    position: [-5, 1, 0],
+    type: 'Static',
+  }));
+  // Right wall
+  useBox(() => ({
+    args: [0.1, 2, 10],
+    position: [5, 1, 0],
+    type: 'Static',
+  }));
+  // Back wall
+  useBox(() => ({
+    args: [10, 2, 0.1],
+    position: [0, 1, -5],
+    type: 'Static',
+  }));
+  // Front wall
+  useBox(() => ({
+    args: [10, 2, 0.1],
+    position: [0, 1, 5],
+    type: 'Static',
+  }));
+  // Desk
+  useBox(() => ({
+    args: [1, 1, 2],
+    position: [0, 0.5, 3],
+    type: 'Static',
+  }));
+  return null;
 }

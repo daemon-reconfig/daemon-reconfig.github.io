@@ -4,24 +4,30 @@
 import React from 'react';
 
 /**
- * Sci-Fi HUD overlay with:
- *  • Circular Health & Vitality gauges
+ * A fully‐redesigned sci‐fi HUD with:
+ *  • Circular Health & Vitality gauges (percentage in center)
  *  • Spinning vinyl record for “Now Playing”
  *  • Centered glowing crosshair
  *  • Darkened edges/vignette
- *
- * Replace `health`, `vitality`, and `trackName` with real game data.
  */
 export default function HUDOverlay() {
-  const health = 75;            // 0–100
-  const vitality = 50;          // 0–100
-  const trackName = 'Nebula Drift'; // example track title
+  // Replace these with real game data or props
+  const health = 75;            
+  const vitality = 50;          
+  const trackName = 'Nebula Drift'; 
+
+  // Build style objects that allow the custom CSS variable
+  const healthGaugeStyle: React.CSSProperties & Record<string, string> = {
+    '--gauge-percent': `${health}%`,
+  };
+  const vitalityGaugeStyle: React.CSSProperties & Record<string, string> = {
+    '--gauge-percent': `${vitality}%`,
+  };
 
   return (
     <div style={styles.container}>
-      {/* Inline CSS for animations and styling */}
       <style>{`
-        /* ──────────────────── Vignette / Visor Effect ──────────────────── */
+        /* ── Vignette / Visor Effect ── */
         .hud-vignette {
           position: absolute;
           inset: 0;
@@ -34,7 +40,7 @@ export default function HUDOverlay() {
           z-index: 1;
         }
 
-        /* ──────────────────── Circular Gauge Base ──────────────────── */
+        /* ── Circular Gauge Base ── */
         .gauge {
           position: absolute;
           width: 120px;
@@ -46,8 +52,9 @@ export default function HUDOverlay() {
             rgba(0, 0, 0, 0.2) var(--gauge-percent),
             rgba(0, 0, 0, 0.2) 100%
           );
-          box-shadow: 0 0 12px rgba(0, 255, 65, 0.6),
-                      inset 0 0 8px rgba(0, 255, 65, 0.4);
+          box-shadow:
+            0 0 12px rgba(0, 255, 65, 0.6),
+            inset 0 0 8px rgba(0, 255, 65, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -74,7 +81,6 @@ export default function HUDOverlay() {
           z-index: 3;
         }
 
-        /* Positioning for Health (left) and Vitality (right) gauges */
         .gauge-health {
           top: 20px;
           left: 20px;
@@ -84,7 +90,7 @@ export default function HUDOverlay() {
           right: 20px;
         }
 
-        /* ──────────────────── Spinning Vinyl Widget ──────────────────── */
+        /* ── Spinning Vinyl Widget ── */
         .vinyl-container {
           position: absolute;
           bottom: 20px;
@@ -108,8 +114,9 @@ export default function HUDOverlay() {
             #000 40%,
             #111 100%
           );
-          box-shadow: 0 0 8px rgba(0, 255, 65, 0.4),
-                      inset 0 0 4px rgba(0, 0, 0, 0.7);
+          box-shadow:
+            0 0 8px rgba(0, 255, 65, 0.4),
+            inset 0 0 4px rgba(0, 0, 0, 0.7);
           animation: vinyl-spin 8s linear infinite;
         }
 
@@ -150,7 +157,7 @@ export default function HUDOverlay() {
           max-width: 140px;
         }
 
-        /* ──────────────────── Glowing Crosshair ──────────────────── */
+        /* ── Glowing Rotating Crosshair ── */
         .crosshair {
           position: absolute;
           top: 50%;
@@ -162,7 +169,6 @@ export default function HUDOverlay() {
           z-index: 3;
           pointer-events: none;
         }
-
         .crosshair circle {
           cx: 20;
           cy: 20;
@@ -173,14 +179,13 @@ export default function HUDOverlay() {
           opacity: 0.8;
           animation: crosshair-pulse 2s ease-in-out infinite alternate;
         }
-
         .crosshair line {
           stroke: #00FF41;
           stroke-width: 2;
           opacity: 0.8;
         }
 
-        /* ──────────────────── Animations ──────────────────── */
+        /* ── Animations ── */
         @keyframes vinyl-spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
@@ -197,38 +202,33 @@ export default function HUDOverlay() {
         }
       `}</style>
 
-      {/* 1) Darkened Vignette / Visor */}
+      {/* Vignette */}
       <div className="hud-vignette" />
 
-      {/* 2) Health Gauge */}
+      {/* Health Gauge */}
       <div
         className="gauge gauge-health"
-        style={
-          // Cast to any so that --gauge-percent is accepted
-          ({ '--gauge-percent': `${health}%` } as any)
-        }
+        style={healthGaugeStyle}
       >
         <div className="gauge-text">{health}%</div>
       </div>
 
-      {/* 3) Vitality Gauge */}
+      {/* Vitality Gauge */}
       <div
         className="gauge gauge-vitality"
-        style={
-          ({ '--gauge-percent': `${vitality}%` } as any)
-        }
+        style={vitalityGaugeStyle}
       >
         <div className="gauge-text">{vitality}%</div>
       </div>
 
-      {/* 4) Spinning Vinyl “Now Playing” */}
+      {/* Spinning Vinyl */}
       <div className="vinyl-container">
         <div className="vinyl-record" />
         <div className="vinyl-label">VINYL</div>
         <div className="vinyl-name">{trackName}</div>
       </div>
 
-      {/* 5) Glowing, Rotating Crosshair */}
+      {/* Rotating Crosshair */}
       <svg className="crosshair" viewBox="0 0 40 40" width={40} height={40}>
         <circle cx={20} cy={20} r={12} />
         <line x1={20} y1={8} x2={20} y2={0} />
@@ -240,12 +240,11 @@ export default function HUDOverlay() {
   );
 }
 
-// Inline style for the container
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     position: 'fixed',
     inset: 0,
-    pointerEvents: 'none', // allow clicks to pass through
+    pointerEvents: 'none',
     zIndex: 999,
     overflow: 'hidden',
   },

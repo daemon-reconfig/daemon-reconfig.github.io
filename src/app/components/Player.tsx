@@ -23,7 +23,7 @@ export default function Player() {
   // create an invisible physics body
   const [ref, api] = useBox<THREE.Mesh>(() => ({
     mass: 1,
-    position: [0, 1, 4], // spawn in front of desk
+    position: [0, 0.6, 0.4], // spawn in front of desk
     args: [0.5, 1.7, 0.5],
     fixedRotation: true,
   }));
@@ -80,7 +80,7 @@ export default function Player() {
     // sync camera to the body
     const p = new THREE.Vector3();
     ref.current!.getWorldPosition(p);
-    camera.position.copy(p).add(new THREE.Vector3(0, 0.9, 0));
+    camera.position.copy(p).add(new THREE.Vector3(0, 0.6, 0.8));
   });
 
   return <PointerLockControls ref={controls} />;

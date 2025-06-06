@@ -59,9 +59,10 @@ export default function SceneWrapper() {
           pointerEvents: disableCanvasPointer ? 'none' : 'auto',
         }}
       >
-        <Canvas key={key} camera={{ position: [0, 2, 10] }} shadows>
+        <Canvas key={key} camera={{ position: [0, 0.6, 0.8] }} shadows>
           {/* Ambient & Directional Lights */}
           <ambientLight intensity={0.5} />
+          
           <directionalLight
             castShadow
             intensity={0.8}

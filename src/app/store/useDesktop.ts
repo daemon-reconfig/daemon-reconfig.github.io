@@ -32,6 +32,21 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
   windows: [],
 
   openWindow: (type: AppType) => {
+    const existing = get().windows.find((w) => w.type === type);
+    if (existing) {
+      const maxZ = get().windows.reduce<number>(
+        (m, w) => Math.max(m, w.zIndex),
+        0
+      );
+      set({
+        windows: get().windows.map((w) =>
+          w.id === existing.id
+            ? { ...w, isMinimized: false, zIndex: maxZ + 1 }
+            : w
+        ),
+      });
+      return; 
+    }
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isMobile = vw <= 600;

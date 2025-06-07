@@ -7,7 +7,7 @@ import styles from '../LinuxDesktop.module.css';
 export default function ResumeApp() {
   return (
     <iframe
-      src="/resume.pdf"
+      src="/Resume_Mehul_Sardana.pdf"
       className={styles.resumeIframe}
       title="Resume"
     />

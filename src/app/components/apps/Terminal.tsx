@@ -3,37 +3,76 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '../LinuxDesktop.module.css';
+import { useDesktopStore, AppType } from '@/app/store/useDesktop';
+
+
+const SUPPORTED_APPS: AppType[] = ['terminal', 'notes', 'browser', 'resume'];
 
 export default function TerminalApp() {
+  const openWindow = useDesktopStore((s) => s.openWindow);
+
   const [history, setHistory] = useState<string[]>([]);
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => textareaRef.current?.focus(), []);
+  // Auto-focus
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const runCommand = (cmd: string) => {
-    const trimmed = cmd.trim().toLowerCase();
-    if (trimmed === 'help') {
-      return 'Available commands: help, echo [text], date';
-    } else if (trimmed.startsWith('echo ')) {
-      return cmd.slice(5);
-    } else if (trimmed === 'date') {
-      return new Date().toString();
-    } else {
-      return `bash: ${cmd}: command not found`;
+    const trimmed = cmd.trim();
+    const lower = trimmed.toLowerCase();
+
+    // HELP
+    if (lower === 'help') {
+      return [
+        'Available commands:',
+        '• help',
+        '• echo [text]',
+        '• date',
+        '• open [terminal|notes|browser|resume]',
+      ].join('\n');
     }
+
+    // ECHO
+    if (lower.startsWith('echo ')) {
+      return trimmed.slice(5);
+    }
+
+    // DATE
+    if (lower === 'date') {
+      return new Date().toString();
+    }
+
+    // OPEN command
+    if (lower.startsWith('open ')) {
+      const appName = lower.slice(5) as AppType;
+      if (SUPPORTED_APPS.includes(appName)) {
+        openWindow(appName);
+        return `Opening ${appName}...`;
+      } else {
+        return `bash: ${appName}: no such app`;
+      }
+    }
+
+    // Shortcut: just typing the app name
+    if (SUPPORTED_APPS.includes(lower as AppType)) {
+      openWindow(lower as AppType);
+      return `Opening ${lower}...`;
+    }
+
+    // Unknown
+    return `bash: ${trimmed}: command not found`;
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const result = runCommand(input);
-      setHistory((h) => {
-        const next = [...h, `$ ${input}`, result];
-        // keep only last 100 lines
-        return next.slice(-100);
-      });
+      setHistory((h) => [...h, `$ ${input}`, result]);
       setInput('');
+      // scroll to bottom
       setTimeout(() => {
         const ta = textareaRef.current;
         if (ta) ta.scrollTop = ta.scrollHeight;

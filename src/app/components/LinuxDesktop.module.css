@@ -1,0 +1,177 @@
+/* src/app/components/LinuxDesktop.module.css */
+
+/* ── Desktop Container ───────────────────────────────────────────────────────── */
+.desktop {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url('/desktop-background.jpg') center/cover;
+  overflow: hidden;
+}
+
+/* ── Responsive Icon Grid ─────────────────────────────────────────────────────── */
+.iconContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 20px;
+  padding: 16px;
+}
+
+.icon {
+  text-align: center;
+  color: #00ff41;
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Ubuntu Mono', monospace;
+  outline: none;
+}
+.icon:focus {
+  box-shadow: 0 0 4px #00ff41;
+}
+.iconEmoji {
+  font-size: 48px;
+}
+.iconLabel {
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+
+/* ── Window Styles ───────────────────────────────────────────────────────────── */
+.window {
+  position: absolute;
+  width: 400px;
+  height: 300px;
+  background: #1e1e1e;
+  border: 2px solid #00ff41;
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.titleBar {
+  background: #000;
+  color: #00ff41;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  padding: 0 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  user-select: none;
+}
+
+.titleText {
+  font-size: 1rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #00ff41;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.windowContent {
+  flex: 1;
+  background: #000;
+  overflow: hidden;
+}
+
+/* ── Media Queries for Mobile ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .iconEmoji {
+    font-size: 36px;
+  }
+  .iconLabel {
+    font-size: 0.8rem;
+  }
+
+  .window {
+    width: 90vw;
+    height: 80vh;
+  }
+  .titleBar {
+    height: 28px;
+    font-size: 0.9rem;
+  }
+}
+
+.desktop,
+.window,
+.icon {
+  
+  cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat927.ani') 16 16, 
+        url('https://cur.cursors-4u.net/nature/nat-10/nat927.png') 16 16,
+        auto;
+}
+/* ── Terminal App ────────────────────────────────────────────────────────────── */
+.terminalContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px;
+  color: #00ff41;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+}
+
+.terminalHistory {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.terminalLine {
+  white-space: pre-wrap;
+  margin-bottom: 2px;
+}
+
+.terminalInput {
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  margin-right: 4px;
+}
+
+.terminalTextarea {
+  flex: 1;
+  background: black;
+  border: none;
+  color: #00ff41;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  resize: none;
+  outline: none;
+}
+
+/* ── Notes App ───────────────────────────────────────────────────────────────── */
+.notesTextarea {
+  width: 100%;
+  height: 100%;
+  background: #111;
+  border: none;
+  color: #00ff41;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 1rem;
+  padding: 8px;
+  resize: none;
+  outline: none;
+}
+
+/* ── Browser App (iframe) ─────────────────────────────────────────────────────── */
+.browserIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.resumeIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

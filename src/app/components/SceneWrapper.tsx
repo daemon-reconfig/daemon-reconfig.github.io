@@ -7,14 +7,12 @@ import { Physics } from '@react-three/cannon';
 import SciFiRoom from './SciFiRoom';
 import { Colliders } from './RoomCollider';
 import Player from './Player';
-import LinuxDesktop from './LinuxDesktop';
 import AccessPrompt from './AccessPrompt';
 import HUDOverlay from './HUDOverlay';
 
 export default function SceneWrapper() {
   // ─── Overlay state flags ───
   const [showPrompt, setShowPrompt] = useState(false);
-  const [showDesktop, setShowDesktop] = useState(false);
   const [showHUD, setShowHUD] = useState(true);
 
   // ─── Dev HMR key hack (force new Canvas on hot reload) ───
@@ -36,18 +34,9 @@ export default function SceneWrapper() {
     setShowHUD(true);
   };
 
-  const handlePromptSuccess = () => {
-    setShowPrompt(false);
-    setShowDesktop(true);
-  };
-
-  const handleExitDesktop = () => {
-    setShowDesktop(false);
-    setShowHUD(true);
-  };
-
+  
   // ─── Disable canvas pointer events when any overlay is visible ───
-  const disableCanvasPointer = showPrompt || showDesktop;
+  const disableCanvasPointer = showPrompt;
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
@@ -95,14 +84,11 @@ export default function SceneWrapper() {
       {/* ─── Access Prompt Overlay ─── */}
       {showPrompt && (
         <AccessPrompt
-          correctPassword="letmein"
+          correctPassword="breefcase2"
           onClose={handlePromptClose}
-          onSuccess={handlePromptSuccess}
+          
         />
       )}
-
-      {/* ─── Linux Desktop Overlay ─── */}
-      {showDesktop && <LinuxDesktop onExit={handleExitDesktop} />}
     </div>
   );
 }

@@ -1,38 +1,32 @@
-// src/app/components/AccessPrompt.tsx
+// ─── file: src/app/components/AccessPrompt.tsx ────────────────────────────────
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   correctPassword: string;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
-export default function AccessPrompt({ correctPassword, onClose, onSuccess }: Props) {
+export default function AccessPrompt({ correctPassword, onClose }: Props) {
+  const router = useRouter();
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
 
-  // On mount: exit pointer lock so the cursor is visible automatically.
+  // Close on Escape
   useEffect(() => {
-    if (document.pointerLockElement) {
-      document.exitPointerLock();
-    }
-
-    // Also handle ESC to close the prompt:
     const handleKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKey);
-    return () => {
-      window.removeEventListener('keydown', handleKey);
-    };
+    return () => window.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input === correctPassword) {
-      onSuccess();
+      router.push('/computer');
     } else {
       setError(true);
       setInput('');
@@ -41,7 +35,7 @@ export default function AccessPrompt({ correctPassword, onClose, onSuccess }: Pr
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <form onSubmit={handleSubmit} className="text-white font-mono text-lg">
+      <form onSubmit={handleSubmit} className="text-green-400 font-mono text-lg">
         <label>
           <span>ACCESS: </span>
           <input

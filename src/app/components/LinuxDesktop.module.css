@@ -1,13 +1,77 @@
 /* src/app/components/LinuxDesktop.module.css */
+/* Top bar */
+.topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: #111;
+  color: #00ff41;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  z-index: 10000;
+}
 
-/* ── Desktop Container ───────────────────────────────────────────────────────── */
+.time {
+  margin-right: 16px;
+}
+
+.cpuGraph {
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  height: 24px;
+  gap: 2px;
+}
+
+.cpuBar {
+  width: 4px;
+  background: #00ff41;
+}
+
+.shutdownBtn {
+  background: none;
+  border: none;
+  color: #00ff41;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 16px;
+}
+
+/* Task bar */
+.taskBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 10000;
+}
+
+.taskIcon {
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* Adjust desktop content to avoid overlapping top/bottom bars */
 .desktop {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: url('/desktop-background.jpg') center/cover;
+  padding-top: 32px;    /* room for topBar */
+  padding-bottom: 40px; /* room for taskBar */
   overflow: hidden;
 }
+
 
 /* ── Responsive Icon Grid ─────────────────────────────────────────────────────── */
 .iconContainer {
@@ -174,4 +238,46 @@
   width: 100%;
   height: 100%;
   border: none;
+}
+.fullscreenButton {
+  background: none;
+  border: none;
+  color: #00ff41;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-right: 8px;
+}
+/* ── Window Controls (red/yellow/green) ───────────────────────────────────────── */
+.windowControls {
+  display: flex;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ── Title Bar Adjustments ───────────────────────────────────────────────────── */
+.titleBar {
+  display: flex;
+  align-items: center;
+  /* keep controls left, title text with some left‐margin */
+  padding: 0 8px;
+  height: 32px;
+  background: #000;
+  color: #00ff41;
+  font-family: 'Ubuntu Mono', monospace;
+  user-select: none;
+}
+
+.titleText {
+  margin-left: 12px; /* space from controls */
+  font-size: 1rem;
 }

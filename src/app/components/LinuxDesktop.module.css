@@ -1,184 +1,172 @@
-/* src/app/components/LinuxDesktop.module.css */
-/* Top bar */
 .topBar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 32px;
-  background: #111;
-  color: #00ff41;
+  background: linear-gradient(90deg, #0f0a2b, #120422);
+  color: #80f7ff;
   display: flex;
   align-items: center;
+  gap: 16px;
   padding: 0 16px;
   font-family: 'Ubuntu Mono', monospace;
-  font-size: 0.9rem;
+  border-bottom: 1px solid #ff3fc8;
   z-index: 10000;
 }
 
+.systemStatus {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: #b9a3ff;
+}
+
 .time {
-  margin-right: 16px;
-}
-
-.cpuGraph {
-  display: flex;
-  align-items: flex-end;
-  flex: 1;
-  height: 24px;
-  gap: 2px;
-}
-
-.cpuBar {
-  width: 4px;
-  background: #00ff41;
+  font-size: 0.9rem;
 }
 
 .shutdownBtn {
   background: none;
   border: none;
-  color: #00ff41;
+  color: #80f7ff;
   cursor: pointer;
   font-size: 1.2rem;
-  margin-left: 16px;
 }
 
-/* Task bar */
 .taskBar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 40px;
-  background: #111;
+  background: linear-gradient(90deg, #0a0a0f, #17051e);
   display: flex;
   align-items: center;
   padding: 0 16px;
   gap: 12px;
+  border-top: 1px solid #ff3fc8;
   z-index: 10000;
 }
 
 .taskIcon {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px 8px;
+  border: 1px solid #6cf2ff;
+  border-radius: 6px;
 }
 
-/* Adjust desktop content to avoid overlapping top/bottom bars */
 .desktop {
   position: relative;
   width: 100vw;
   height: 100vh;
-  padding-top: 32px;    /* room for topBar */
-  padding-bottom: 40px; /* room for taskBar */
+  padding-top: 32px;
+  padding-bottom: 40px;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 55, 195, 0.2), transparent 38%),
+    radial-gradient(circle at 80% 35%, rgba(68, 236, 255, 0.22), transparent 32%),
+    linear-gradient(160deg, #05050d 0%, #0f0b2e 55%, #220b34 100%);
 }
 
+.desktop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
 
-/* ── Responsive Icon Grid ─────────────────────────────────────────────────────── */
 .iconContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(90px, 120px));
   gap: 20px;
-  padding: 16px;
+  padding: 18px;
 }
 
 .icon {
   text-align: center;
-  color: #00ff41;
+  color: #cbfaff;
   cursor: pointer;
   user-select: none;
   font-family: 'Ubuntu Mono', monospace;
   outline: none;
-}
-.icon:focus {
-  box-shadow: 0 0 4px #00ff41;
-}
-.iconEmoji {
-  font-size: 48px;
-}
-.iconLabel {
-  margin-top: 4px;
-  font-size: 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px;
 }
 
-/* ── Window Styles ───────────────────────────────────────────────────────────── */
+.icon:hover,
+.icon:focus {
+  border-color: #6cf2ff;
+  background: rgba(21, 12, 53, 0.6);
+}
+
+.iconEmoji {
+  font-size: 40px;
+}
+
+.iconLabel {
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+
 .window {
   position: absolute;
-  width: 400px;
-  height: 300px;
-  background: #1e1e1e;
-  border: 2px solid #00ff41;
-  box-shadow: 0 0 16px rgba(0, 255, 65, 0.5);
+  background: rgba(11, 10, 21, 0.95);
+  border: 1px solid #59f5ff;
+  box-shadow: 0 0 22px rgba(89, 245, 255, 0.35);
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(4px);
 }
 
 .titleBar {
-  background: #000;
-  color: #00ff41;
-  height: 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  cursor: move;
   padding: 0 8px;
+  height: 32px;
+  background: linear-gradient(90deg, #10061f, #1a0d34);
+  color: #6cf2ff;
   font-family: 'Ubuntu Mono', monospace;
   user-select: none;
 }
 
 .titleText {
-  font-size: 1rem;
-}
-
-.closeButton {
-  background: none;
-  border: none;
-  color: #00ff41;
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
+  margin-left: 12px;
+  font-size: 0.9rem;
 }
 
 .windowContent {
   flex: 1;
-  background: #000;
+  background: #090812;
   overflow: hidden;
 }
 
-/* ── Media Queries for Mobile ───────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .iconEmoji {
-    font-size: 36px;
-  }
-  .iconLabel {
-    font-size: 0.8rem;
-  }
-
-  .window {
-    width: 90vw;
-    height: 80vh;
-  }
-  .titleBar {
-    height: 28px;
-    font-size: 0.9rem;
-  }
+.windowControls {
+  display: flex;
+  gap: 6px;
+  margin-left: 8px;
 }
 
-.desktop,
-.window,
-.icon {
-  
-  cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat927.ani') 16 16, 
-        url('https://cur.cursors-4u.net/nature/nat-10/nat927.png') 16 16,
-        auto;
+.control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
-/* ── Terminal App ────────────────────────────────────────────────────────────── */
+
 .terminalContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 8px;
-  color: #00ff41;
+  color: #7af2ff;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 0.9rem;
 }
@@ -205,22 +193,21 @@
 
 .terminalTextarea {
   flex: 1;
-  background: black;
+  background: transparent;
   border: none;
-  color: #00ff41;
+  color: #7af2ff;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 0.9rem;
   resize: none;
   outline: none;
 }
 
-/* ── Notes App ───────────────────────────────────────────────────────────────── */
 .notesTextarea {
   width: 100%;
   height: 100%;
-  background: #111;
+  background: #0f0d19;
   border: none;
-  color: #00ff41;
+  color: #d8faff;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 1rem;
   padding: 8px;
@@ -228,56 +215,161 @@
   outline: none;
 }
 
-/* ── Browser App (iframe) ─────────────────────────────────────────────────────── */
-.browserIframe {
-  width: 100%;
+.browserShell {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  border: none;
 }
+
+.browserTopBar {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #130f24;
+}
+
+.browserInput {
+  flex: 1;
+  background: #080614;
+  border: 1px solid #6cf2ff;
+  color: #d6f9ff;
+  padding: 6px;
+}
+
+.browserGo,
+.browserChip {
+  border: 1px solid #6cf2ff;
+  background: #1a1338;
+  color: #9ff8ff;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.browserLinks {
+  display: flex;
+  gap: 6px;
+  padding: 0 8px 8px;
+  background: #130f24;
+}
+
+.browserIframe,
 .resumeIframe {
   width: 100%;
   height: 100%;
   border: none;
-}
-.fullscreenButton {
-  background: none;
-  border: none;
-  color: #00ff41;
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-  margin-right: 8px;
-}
-/* ── Window Controls (red/yellow/green) ───────────────────────────────────────── */
-.windowControls {
-  display: flex;
-  gap: 6px;
-  margin-left: 8px;
+  background: white;
 }
 
-.control {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+.browserLoading {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 0.75rem;
+  color: #d6f9ff;
+  background: rgba(5, 5, 9, 0.8);
+  border: 1px solid #6cf2ff;
+  padding: 3px 6px;
 }
 
-/* ── Title Bar Adjustments ───────────────────────────────────────────────────── */
-.titleBar {
-  display: flex;
-  align-items: center;
-  /* keep controls left, title text with some left‐margin */
-  padding: 0 8px;
-  height: 32px;
-  background: #000;
-  color: #00ff41;
+.musicPanel {
+  color: #c5fbff;
+  padding: 16px;
   font-family: 'Ubuntu Mono', monospace;
-  user-select: none;
 }
 
-.titleText {
-  margin-left: 12px; /* space from controls */
+.musicTitle {
+  color: #67f6ff;
+  margin-bottom: 10px;
+}
+
+.musicLibraryRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.musicSearch {
+  flex: 1;
+  background: #080614;
+  border: 1px solid #6cf2ff;
+  color: #d6f9ff;
+  padding: 6px;
+}
+
+.musicStatus {
+  color: #8fdde6;
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+}
+
+.musicCover {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #6cf2ff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.musicTrack {
+  font-size: 1.2rem;
+  color: #ff7dd6;
+}
+
+.musicArtist {
+  margin-bottom: 12px;
+}
+
+.musicButtons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.musicButtons button,
+.calcButtons button,
+.musicLibraryRow button {
+  border: 1px solid #6cf2ff;
+  background: #180f35;
+  color: #d6f9ff;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.musicAudio {
+  width: 100%;
+}
+
+.calcRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.calcInput {
+  background: #070711;
+  border: 1px solid #6cf2ff;
+  color: #d6f9ff;
+  padding: 8px;
   font-size: 1rem;
+}
+
+.calcButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.desktop,
+.window,
+.icon {
+  cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat927.ani') 16 16,
+    url('https://cur.cursors-4u.net/nature/nat-10/nat927.png') 16 16,
+    auto;
+}
+
+@media (max-width: 600px) {
+  .window {
+    width: 90vw;
+    height: 80vh;
+  }
 }

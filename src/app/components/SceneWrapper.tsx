@@ -32,6 +32,7 @@ function SceneLoader() {
 export default function SceneWrapper() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [showHUD, setShowHUD] = useState(true);
+  const [showStickyNoteZoom, setShowStickyNoteZoom] = useState(false);
 
   const handleMonitorClick = () => {
     setShowPrompt(true);

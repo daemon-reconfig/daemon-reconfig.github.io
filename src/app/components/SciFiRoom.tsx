@@ -1,7 +1,6 @@
-// src/app/components/SciFiRoom.tsx
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -14,8 +13,10 @@ export default function SciFiRoom({ onMonitorClick }: SciFiRoomProps) {
   const { scene } = useGLTF('/models/scene.glb');
   const group = useRef<THREE.Group>(null);
 
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
+
   useFrame(() => {
-    // (Optional room animations, if you had any)
+    // room animation hook kept for future use
   });
 
   return (
@@ -23,13 +24,14 @@ export default function SciFiRoom({ onMonitorClick }: SciFiRoomProps) {
       ref={group}
       onPointerDown={(e) => {
         e.stopPropagation();
-        // Trigger only when clicking exactly on Object_13 (your monitor)
         if (e.object.name === 'Object_13') {
           onMonitorClick();
         }
       }}
     >
-      <primitive object={scene} />
+      <primitive object={clonedScene} />
     </group>
   );
 }
+
+useGLTF.preload('/models/scene.glb');

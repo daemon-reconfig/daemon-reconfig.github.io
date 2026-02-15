@@ -14,7 +14,6 @@ export default function AccessPrompt({ correctPassword, onClose }: Props) {
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
 
-  // Close on Escape
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') onClose();
@@ -48,11 +47,7 @@ export default function AccessPrompt({ correctPassword, onClose }: Props) {
             className="bg-black border-b-2 border-green-400 focus:outline-none"
           />
         </label>
-        {error && (
-          <p className="mt-2 text-sm text-yellow-300">
-            Hint: It’s on the sticky note.
-          </p>
-        )}
+        {error && <p className="mt-2 text-sm text-yellow-300">Hint: password is `breefcase2`.</p>}
       </form>
     </div>
   );

@@ -6,7 +6,7 @@ import styles from '../LinuxDesktop.module.css';
 import { useDesktopStore, AppType } from '@/app/store/useDesktop';
 
 
-const SUPPORTED_APPS: AppType[] = ['terminal', 'notes', 'browser', 'resume'];
+const SUPPORTED_APPS: AppType[] = ['terminal', 'notes', 'browser', 'resume', 'music', 'calculator'];
 
 export default function TerminalApp() {
   const openWindow = useDesktopStore((s) => s.openWindow);
@@ -31,7 +31,7 @@ export default function TerminalApp() {
         '• help',
         '• echo [text]',
         '• date',
-        '• open [terminal|notes|browser|resume]',
+        '• open [terminal|notes|browser|resume|music|calculator]',
       ].join('\n');
     }
 

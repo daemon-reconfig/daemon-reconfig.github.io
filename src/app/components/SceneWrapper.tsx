@@ -1,29 +1,38 @@
-// src/app/SceneWrapper.tsx
 'use client';
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Physics } from '@react-three/cannon';
+import { Html, useProgress } from '@react-three/drei';
 import SciFiRoom from './SciFiRoom';
 import { Colliders } from './RoomCollider';
 import Player from './Player';
 import AccessPrompt from './AccessPrompt';
 import HUDOverlay from './HUDOverlay';
 
+function SceneLoader() {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div
+        style={{
+          color: '#7ef8ff',
+          background: 'rgba(0,0,0,0.75)',
+          border: '1px solid #7ef8ff',
+          padding: '10px 14px',
+          fontFamily: 'monospace',
+        }}
+      >
+        Loading Sector {Math.round(progress)}%
+      </div>
+    </Html>
+  );
+}
+
 export default function SceneWrapper() {
-  // ─── Overlay state flags ───
   const [showPrompt, setShowPrompt] = useState(false);
   const [showHUD, setShowHUD] = useState(true);
 
-  // ─── Dev HMR key hack (force new Canvas on hot reload) ───
-  const [key, setKey] = useState(0);
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setKey((k) => k + 1);
-    }
-  }, []);
-
-  // ─── Handlers ───
   const handleMonitorClick = () => {
     setShowPrompt(true);
     setShowHUD(false);
@@ -34,41 +43,32 @@ export default function SceneWrapper() {
     setShowHUD(true);
   };
 
-  
-  // ─── Disable canvas pointer events when any overlay is visible ───
-  const disableCanvasPointer = showPrompt;
-
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
-      {/* ─── Canvas wrapper (toggles pointerEvents) ─── */}
       <div
         style={{
           width: '100%',
           height: '100%',
-          pointerEvents: disableCanvasPointer ? 'none' : 'auto',
+          pointerEvents: showPrompt ? 'none' : 'auto',
         }}
       >
-        <Canvas key={key} camera={{ position: [0, 0.6, 0.8] }} shadows>
-          {/* Ambient & Directional Lights */}
-          <ambientLight intensity={0.5} />
-          
+        <Canvas
+          camera={{ position: [0, 0.6, 0.8], fov: 70 }}
+          dpr={[1, 1.5]}
+          gl={{ antialias: false, powerPreference: 'high-performance' }}
+          shadows
+        >
+          <ambientLight intensity={0.45} />
           <directionalLight
             castShadow
-            intensity={0.8}
+            intensity={0.7}
             color={0xffffff}
             position={[5, 10, 5]}
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-            shadow-camera-near={1}
-            shadow-camera-far={50}
-            shadow-camera-left={-10}
-            shadow-camera-right={10}
-            shadow-camera-top={10}
-            shadow-camera-bottom={-10}
+            shadow-mapSize-width={512}
+            shadow-mapSize-height={512}
           />
 
-          {/* 3D scene */}
-          <Suspense fallback={null}>
+          <Suspense fallback={<SceneLoader />}>
             <SciFiRoom onMonitorClick={handleMonitorClick} />
             <Physics gravity={[0, -9.81, 0]}>
               <Colliders />
@@ -78,17 +78,8 @@ export default function SceneWrapper() {
         </Canvas>
       </div>
 
-      {/* ─── HUD Overlay (HTML/CSS, outside Canvas) ─── */}
       {showHUD && <HUDOverlay />}
-
-      {/* ─── Access Prompt Overlay ─── */}
-      {showPrompt && (
-        <AccessPrompt
-          correctPassword="breefcase2"
-          onClose={handlePromptClose}
-          
-        />
-      )}
+      {showPrompt && <AccessPrompt correctPassword="breefcase2" onClose={handlePromptClose} />}
     </div>
   );
 }

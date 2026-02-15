@@ -25,6 +25,51 @@ export default function MusicApp() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [trackIndex, setTrackIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [query, setQuery] = useState('synthwave');
+  const [tracks, setTracks] = useState<Track[]>(FALLBACK_TRACKS);
+  const [libraryStatus, setLibraryStatus] = useState('Using built-in library');
+
+  const track = useMemo(() => tracks[trackIndex], [trackIndex, tracks]);
+
+  const loadInternetLibrary = async () => {
+    setLibraryStatus('Fetching internet tracks...');
+    try {
+      const term = encodeURIComponent(query.trim() || 'synthwave');
+      const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=20`);
+      const data = await res.json();
+      const incoming: Track[] = (data.results || [])
+        .filter((item: { previewUrl?: string }) => Boolean(item.previewUrl))
+        .map(
+          (item: {
+            trackName?: string;
+            artistName?: string;
+            previewUrl: string;
+            artworkUrl100?: string;
+          }) => ({
+            name: item.trackName || 'Unknown Track',
+            artist: item.artistName || 'Unknown Artist',
+            src: item.previewUrl,
+            cover: item.artworkUrl100,
+          })
+        );
+
+      if (!incoming.length) {
+        setLibraryStatus('No internet previews found, using built-in set');
+        return;
+      }
+
+      setTracks(incoming);
+      setTrackIndex(0);
+      setPlaying(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.load();
+      }
+      setLibraryStatus(`Loaded ${incoming.length} tracks from internet`);
+    } catch {
+      setLibraryStatus('Internet library unavailable; fallback library active');
+    }
+  };
 
   const track = useMemo(() => TRACKS[trackIndex], [trackIndex]);
 
@@ -46,6 +91,7 @@ export default function MusicApp() {
   };
 
   const shiftTrack = (direction: 1 | -1) => {
+    const next = (trackIndex + direction + tracks.length) % tracks.length;
     const next = (trackIndex + direction + TRACKS.length) % TRACKS.length;
     setTrackIndex(next);
     setPlaying(false);
@@ -58,6 +104,27 @@ export default function MusicApp() {
   return (
     <div className={styles.musicPanel}>
       <div className={styles.musicTitle}>Song Shifter // Now Loaded</div>
+      <div className={styles.musicLibraryRow}>
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className={styles.musicSearch}
+          placeholder="Search internet songs (e.g. synthwave)"
+        />
+        <button onClick={loadInternetLibrary}>Load Net Library</button>
+      </div>
+      <div className={styles.musicStatus}>{libraryStatus}</div>
+
+      {track.cover && (
+        <Image
+          src={track.cover}
+          alt={track.name}
+          width={64}
+          height={64}
+          unoptimized
+          className={styles.musicCover}
+        />
+      )}
       <div className={styles.musicTrack}>{track.name}</div>
       <div className={styles.musicArtist}>{track.artist}</div>
 

@@ -282,6 +282,34 @@
   margin-bottom: 10px;
 }
 
+.musicLibraryRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.musicSearch {
+  flex: 1;
+  background: #080614;
+  border: 1px solid #6cf2ff;
+  color: #d6f9ff;
+  padding: 6px;
+}
+
+.musicStatus {
+  color: #8fdde6;
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+}
+
+.musicCover {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #6cf2ff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
 .musicTrack {
   font-size: 1.2rem;
   color: #ff7dd6;
@@ -298,6 +326,8 @@
 }
 
 .musicButtons button,
+.calcButtons button,
+.musicLibraryRow button {
 .calcButtons button {
   border: 1px solid #6cf2ff;
   background: #180f35;

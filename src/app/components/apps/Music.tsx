@@ -1,9 +1,17 @@
 'use client';
 
 import React, { useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import styles from '../LinuxDesktop.module.css';
 
-const TRACKS = [
+type Track = {
+  name: string;
+  artist: string;
+  src: string;
+  cover?: string;
+};
+
+const FALLBACK_TRACKS: Track[] = [
   {
     name: 'Neon Run',
     artist: 'Synth Unit',
@@ -71,8 +79,6 @@ export default function MusicApp() {
     }
   };
 
-  const track = useMemo(() => TRACKS[trackIndex], [trackIndex]);
-
   const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -92,7 +98,6 @@ export default function MusicApp() {
 
   const shiftTrack = (direction: 1 | -1) => {
     const next = (trackIndex + direction + tracks.length) % tracks.length;
-    const next = (trackIndex + direction + TRACKS.length) % TRACKS.length;
     setTrackIndex(next);
     setPlaying(false);
     if (audioRef.current) {

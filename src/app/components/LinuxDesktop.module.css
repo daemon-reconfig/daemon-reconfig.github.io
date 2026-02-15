@@ -328,7 +328,6 @@
 .musicButtons button,
 .calcButtons button,
 .musicLibraryRow button {
-.calcButtons button {
   border: 1px solid #6cf2ff;
   background: #180f35;
   color: #d6f9ff;

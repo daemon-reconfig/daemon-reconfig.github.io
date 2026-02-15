@@ -32,11 +32,6 @@ export default function HUDOverlay() {
         .helmet-corner.br { bottom:24px; right:24px; border-left:none; border-top:none; }
         .hud-vignette { position:absolute; inset:0; background:radial-gradient(circle at center, rgba(0,0,0,0) 52%, rgba(0,0,0,.82) 100%); }
         .scanlines { position:absolute; inset:0; background:repeating-linear-gradient(180deg, rgba(130,255,255,0.04) 0 2px, transparent 2px 5px); mix-blend-mode:screen; }
-        .helmet-frame { position:absolute; inset:10px; border: 2px solid rgba(0,255,200,.3); border-radius: 24px; box-shadow: inset 0 0 30px rgba(0,255,200,.15); }
-        .helmet-frame::before, .helmet-frame::after { content:''; position:absolute; top:50%; width:18%; height:1px; background:rgba(0,255,200,.35); }
-        .helmet-frame::before { left:0; }
-        .helmet-frame::after { right:0; }
-        .hud-vignette { position:absolute; inset:0; background:radial-gradient(circle at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.75) 100%); }
         .gauge { position:absolute; width:120px; height:120px; border-radius:50%; background:conic-gradient(#003300 0%, #00FFB0 var(--gauge-percent), rgba(0,0,0,.25) var(--gauge-percent), rgba(0,0,0,.25) 100%); box-shadow:0 0 12px rgba(0,255,176,.6), inset 0 0 8px rgba(0,255,176,.4); display:flex; align-items:center; justify-content:center; }
         .gauge::before { content:''; position:absolute; width:78px; height:78px; border-radius:50%; background:rgba(0,0,0,.8); border:2px solid #00FFB0; }
         .gauge-text { position:relative; color:#00FFB0; font: bold 1.1rem Eurostile, sans-serif; }
@@ -62,10 +57,6 @@ export default function HUDOverlay() {
         <div className="helmet-corner br" />
       </div>
       <div className="status-strip">HELMET LINK // STABLE // O₂ 98%</div>
-        @keyframes vinyl-spin { from { transform:rotate(0deg);} to { transform:rotate(360deg);} }
-      `}</style>
-      <div className="hud-vignette" />
-      <div className="helmet-frame" />
       <div className="gauge gauge-health" style={healthGaugeStyle}><div className="gauge-text">{health}%</div></div>
       <div className="gauge gauge-vitality" style={vitalityGaugeStyle}><div className="gauge-text">{vitality}%</div></div>
       <div className="vinyl-container"><div className="vinyl-record" /><div className="vinyl-name">{trackName}</div></div>

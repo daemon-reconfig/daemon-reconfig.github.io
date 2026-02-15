@@ -339,6 +339,20 @@
   width: 100%;
 }
 
+.volumeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #9eeeff;
+  font-size: 0.78rem;
+}
+
+.volumeSlider {
+  flex: 1;
+  accent-color: #67f6ff;
+}
+
 .calcRoot {
   display: flex;
   flex-direction: column;

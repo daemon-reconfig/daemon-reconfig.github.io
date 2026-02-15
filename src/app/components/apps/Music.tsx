@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from '../LinuxDesktop.module.css';
 
@@ -29,21 +29,36 @@ const FALLBACK_TRACKS: Track[] = [
   },
 ];
 
+const DEFAULT_QUERY = 'cyberpunk synthwave';
+
 export default function MusicApp() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [trackIndex, setTrackIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [query, setQuery] = useState('synthwave');
+  const [query, setQuery] = useState(DEFAULT_QUERY);
   const [tracks, setTracks] = useState<Track[]>(FALLBACK_TRACKS);
-  const [libraryStatus, setLibraryStatus] = useState('Using built-in library');
+  const [libraryStatus, setLibraryStatus] = useState('Booting auto net library...');
+  const [volume, setVolume] = useState(0.4);
 
   const track = useMemo(() => tracks[trackIndex], [trackIndex, tracks]);
 
-  const loadInternetLibrary = async () => {
+  const tryPlay = useCallback(async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    try {
+      await audio.play();
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+      setLibraryStatus((prev) => `${prev} • Press Play if autoplay is blocked`);
+    }
+  }, []);
+
+  const loadInternetLibrary = useCallback(async (term: string, shouldAutoplay = true) => {
     setLibraryStatus('Fetching internet tracks...');
     try {
-      const term = encodeURIComponent(query.trim() || 'synthwave');
-      const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=20`);
+      const encoded = encodeURIComponent(term.trim() || DEFAULT_QUERY);
+      const res = await fetch(`https://itunes.apple.com/search?term=${encoded}&entity=song&limit=20`);
       const data = await res.json();
       const incoming: Track[] = (data.results || [])
         .filter((item: { previewUrl?: string }) => Boolean(item.previewUrl))
@@ -62,22 +77,44 @@ export default function MusicApp() {
         );
 
       if (!incoming.length) {
-        setLibraryStatus('No internet previews found, using built-in set');
+        setLibraryStatus('No internet previews found; fallback library active');
         return;
       }
 
       setTracks(incoming);
       setTrackIndex(0);
-      setPlaying(false);
+      setLibraryStatus(`Auto-loaded ${incoming.length} net tracks`);
+
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.load();
       }
-      setLibraryStatus(`Loaded ${incoming.length} tracks from internet`);
+
+      if (shouldAutoplay) {
+        setTimeout(() => {
+          void tryPlay();
+        }, 120);
+      }
     } catch {
-      setLibraryStatus('Internet library unavailable; fallback library active');
+      setTracks(FALLBACK_TRACKS);
+      setTrackIndex(0);
+      setLibraryStatus('Internet unavailable; using fallback tracks');
+      if (shouldAutoplay) {
+        setTimeout(() => {
+          void tryPlay();
+        }, 120);
+      }
     }
-  };
+  }, [tryPlay]);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = volume;
+  }, [volume]);
+
+  useEffect(() => {
+    void loadInternetLibrary(DEFAULT_QUERY, true);
+  }, [loadInternetLibrary]);
 
   const togglePlay = async () => {
     const audio = audioRef.current;
@@ -88,35 +125,33 @@ export default function MusicApp() {
       return;
     }
 
-    try {
-      await audio.play();
-      setPlaying(true);
-    } catch {
-      setPlaying(false);
-    }
+    await tryPlay();
   };
 
-  const shiftTrack = (direction: 1 | -1) => {
+  const shiftTrack = async (direction: 1 | -1) => {
     const next = (trackIndex + direction + tracks.length) % tracks.length;
     setTrackIndex(next);
     setPlaying(false);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.load();
+      setTimeout(() => {
+        void tryPlay();
+      }, 80);
     }
   };
 
   return (
     <div className={styles.musicPanel}>
-      <div className={styles.musicTitle}>Song Shifter // Now Loaded</div>
+      <div className={styles.musicTitle}>Song Shifter // Auto Net Stream</div>
       <div className={styles.musicLibraryRow}>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className={styles.musicSearch}
-          placeholder="Search internet songs (e.g. synthwave)"
+          placeholder="Search internet songs"
         />
-        <button onClick={loadInternetLibrary}>Load Net Library</button>
+        <button onClick={() => void loadInternetLibrary(query, true)}>Refresh Net</button>
       </div>
       <div className={styles.musicStatus}>{libraryStatus}</div>
 
@@ -134,9 +169,22 @@ export default function MusicApp() {
       <div className={styles.musicArtist}>{track.artist}</div>
 
       <div className={styles.musicButtons}>
-        <button onClick={() => shiftTrack(-1)}>⏮</button>
-        <button onClick={togglePlay}>{playing ? '⏸ Pause' : '▶ Play'}</button>
-        <button onClick={() => shiftTrack(1)}>⏭</button>
+        <button onClick={() => void shiftTrack(-1)}>⏮</button>
+        <button onClick={() => void togglePlay()}>{playing ? '⏸ Pause' : '▶ Play'}</button>
+        <button onClick={() => void shiftTrack(1)}>⏭</button>
+      </div>
+
+      <div className={styles.volumeRow}>
+        <span>VOL {(volume * 100).toFixed(0)}%</span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
+          className={styles.volumeSlider}
+        />
       </div>
 
       <audio ref={audioRef} controls className={styles.musicAudio} onEnded={() => setPlaying(false)}>

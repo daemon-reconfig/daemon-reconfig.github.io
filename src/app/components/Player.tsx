@@ -55,7 +55,7 @@ export default function Player() {
   }, [api.velocity]);
 
   useFrame(() => {
-    const speed = 4;
+    const speed = 6;
     const keys = window.keyStates || {};
 
     // camera‐relative axes
